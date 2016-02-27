@@ -25,7 +25,7 @@
    :max-body   (parser-integer-config :server-max-body 8388608)
    :max-line   (parser-integer-config :server-max-line 4096)})
 
-(defn- start-server [& handlers]
+(defn start-server [& handlers]
   (log/info "-> starting http-kit-server")
   (log/info "-> starting httpkit")
   (let [server-config (server-config)
@@ -34,10 +34,9 @@
                             (hlth/health-handler)
                             handlers)]
     (log/info "Starting httpkit with port " (server-config :port) " and bind " (server-config :ip) ".")
-    (log/info "Starting httpkit with handlers: " handlers)
     (httpkit/run-server all-handlers server-config)))
 
-(defn- stop-server [server]
+(defn stop-server [server]
   (log/info "-> stopping http-kit-server")
   (let [timeout (parser-integer-config :httpkit-timeout 100)]
     (if server
