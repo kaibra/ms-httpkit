@@ -5,6 +5,12 @@ Usage:
 
 
 ```clj
+(ns kaibra.ms-httpkit.example
+  (:require
+    [kaibra.ms-httpkit :as httpk]
+    [compojure.core :as c]
+    [mount.core :refer [defstate]]))
+
 (def first-example-route
   (c/GET "/example1" []
     {:status 200
