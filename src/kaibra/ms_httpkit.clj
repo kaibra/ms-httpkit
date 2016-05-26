@@ -5,6 +5,7 @@
             [kaibra.stateful.app-status :as apps]
             [kaibra.stateful.health :as hlth]
             [clojure.tools.logging :as log]
+            [ring.middleware.params :as middleware]
             [compojure.core :as c]))
 
 (def default-port 3000)
@@ -29,10 +30,11 @@
   (log/info "-> starting http-kit-server")
   (log/info "-> starting httpkit")
   (let [server-config (server-config)
-        all-handlers (apply c/routes
-                            (apps/app-status-handler)
-                            (hlth/health-handler)
-                            handlers)]
+        all-handlers (-> (apply c/routes
+                                (apps/app-status-handler)
+                                (hlth/health-handler)
+                                handlers)
+                         (middleware/wrap-params))]
     (log/info "Starting httpkit with port " (server-config :port) " and bind " (server-config :ip) ".")
     (httpkit/run-server all-handlers server-config)))
 
